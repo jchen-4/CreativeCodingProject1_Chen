@@ -1,15 +1,23 @@
+//originally i was going to give the user the ability to wipe the fog off the glasses
+//but i kept accidentally erasing the glasses with the fog
+
 let fog = [];
 let fog1 = [];
-
+let lightcolor; 
+let a //
+let b // a, b c are for changing the color of the streaks of light
+let c //
+let d // this affects the opacity, making the light look more translucent
+let e // this shifts the light streaks down the y axis
 function setup() {
-  createCanvas(800, 800);
-  for(let i = 0; i <1000; i++){
+  createCanvas(800, 600);
+  for(let i = 0; i <1000; i++){ //creates the fog blob on the left
       let x = random(160, 250);
       let y = random(280, 330);
       let r = random(15);
       fog[i] = new FogMachine(x, y, r);
     }
-    for (let j = 0; j <500; j++){
+    for (let j = 0; j <500; j++){ //creates the fog blob on the right
       let x = random(460, 550);
       let y = random(280, 330);
       let r = random(15);
@@ -19,9 +27,8 @@ function setup() {
 
 function draw() {
   background(14, 33, 71);
- 
   for (let i = 0; i < fog.length; i++) {
-  fog[i].move();
+  fog[i].move(); //the fog spreads outside of the glasses, I've tried a few ways to fix it but it didn't work
   fog[i].show();
   
   for(let j = 0; j < fog1.length; j++){
@@ -32,10 +39,33 @@ function draw() {
   }
   fill(245, 231, 122);
   circle(30, 40, 100); //creates moon
+  trafficlight();
+  atigmatism(255, 0, 0, 20, 260); //lights going from left to upper right
+  atigmatism(255, 238, 5, 20, 315);
+  atigmatism(0, 255, 0, 20, 370);
   glasses();
+
+  noStroke();
+  fill(128, 230); //light grey cloud
+  ellipse(500, 80, 100); //creates the clouds on the top of the screen
+  ellipse(600, 80, 100);
+  fill(128);
+  ellipse(550, 60, 120);
+
+  fill(158, 230); // medium grey cloud
+  ellipse(450, 80, 100);
+  ellipse(550, 80, 100);
+  fill(158);
+  ellipse(500, 60, 120);
+
+  fill(102, 230); //darkest cloud
+  ellipse(350, 90, 100);
+  ellipse(450, 90, 100);
+  fill(102);
+  ellipse(400, 70, 120);
 }
 
-function glasses(){
+function glasses(){ //creates the glasses
   for (let i = 0; i<2; i++){
   strokeWeight(1);
   stroke(0);
@@ -49,14 +79,49 @@ function glasses(){
   }
 }
 
-class FogMachine {
+function trafficlight(){ //creates the traffic light
+fill(46, 46, 45);
+rect(340, 230, 80, 160);
+fill(255);
+//circle(380, 260, 35); originally wanted to keep all three lights on permanently,
+//                      but having them flash seemed more interesting
+//circle(380, 315, 35); 
+//circle(380, 365, 35);
+
+if (frameCount % 10 == 0){ //i was inspired by the code we looked at last week where we used frameCount to change the background color
+  lightcolor = 1;
+}else if (frameCount % 13 == 0){
+  lightcolor = 2;
+}else if (frameCount % 15 == 0){
+  lightcolor = 3;
+  }
+
+
+switch (lightcolor){ //makes the traffic light colors appear and flash
+  case 1: //red light
+    fill(255, 0, 0);
+    circle(380, 260, 35);
+    break
+  case 2: //yellow light
+    fill(255, 238, 5);
+    circle(380, 315, 35);
+    break
+  case 3: //green light
+    fill(0, 255, 0);
+    circle(380, 365, 35);
+    break
+}
+}
+
+
+class FogMachine { //shiffman 7.3 arrays of objects
   constructor(x, y, r) {
     this.x = x;
     this.y = y;
     this.r = r;
   }
 
-  move() {
+  move() { //this makes the ellipses move a little bit, like particle effects
     this.x = this.x + random(-1, 1);
     this.y = this.y + random(-1, 1);
   }
@@ -71,3 +136,11 @@ class FogMachine {
   }
 }
 
+function atigmatism(a, b , c, d, e) {
+  noStroke();
+   fill(a, b, c, d);
+  for (k = 0; k < 30; k++) {
+  ellipse(380 + k*5, e + k*-4, 20 + k*-0.6);
+
+}
+}
