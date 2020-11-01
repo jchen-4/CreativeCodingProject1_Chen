@@ -3,14 +3,16 @@
 
 let fog = [];
 let fog1 = [];
+let fog2 = [];
 let lightcolor; 
 let a //
 let b // a, b c are for changing the color of the streaks of light
 let c //
 let d // this affects the opacity, making the light look more translucent
 let e // this shifts the light streaks down the y axis
+let scene = 1
 function setup() {
-  createCanvas(800, 600);
+  createCanvas(700, 600);
   for(let i = 0; i <1000; i++){ //creates the fog blob on the left
       let x = random(160, 250);
       let y = random(280, 330);
@@ -23,10 +25,16 @@ function setup() {
       let r = random(15);
       fog[j] = new FogMachine(x, y, r);
     }
+  
 }
 
 function draw() {
-  background(14, 33, 71);
+switchscene();
+revertscene();
+line(0, 350, 500, 350);
+line(100, 0, 100, 600);
+if (scene == 1)  {
+    background(14, 33, 71);
   for (let i = 0; i < fog.length; i++) {
   fog[i].move(); //the fog spreads outside of the glasses, I've tried a few ways to fix it but it didn't work
   fog[i].show();
@@ -37,8 +45,9 @@ function draw() {
   }
   
   }
-  fill(245, 231, 122);
+  fill(245, 231, 122, 180);
   circle(30, 40, 100); //creates moon
+  circle(30, 40, 110);
   trafficlight();
   atigmatism(255, 0, 0, 20, 260); //lights going from left to upper right
   atigmatism(255, 238, 5, 20, 315);
@@ -63,6 +72,75 @@ function draw() {
   ellipse(450, 90, 100);
   fill(102);
   ellipse(400, 70, 120);
+  
+} else{
+background(14, 33, 71);
+  fill(46, 46, 45);
+  rect(285, 200, 130, 240);
+  fill(255);
+  stroke(0);
+   noFill();
+  strokeWeight(10);
+      if (frameCount % 10 == 0){ 
+  lightcolor = 1;
+}else if (frameCount % 13 == 0){
+  lightcolor = 2;
+}else if (frameCount % 15 == 0){
+  lightcolor = 3;
+  }
+
+
+switch (lightcolor){ //makes the traffic light colors appear and flash
+  case 1: //red light
+    fill(255, 0, 0);
+    circle(350, 250, 50);
+    break
+  case 2: //yellow light
+    fill(255, 238, 5);
+    circle(350, 315, 50);
+    break
+  case 3: //green light
+    fill(0, 255, 0);
+    circle(350, 370, 50);
+    break
+}
+  if (mouseY >= 200) {
+  fill(46, 46, 45);
+   rect(295, 180, 130, 240);
+
+    if (frameCount % 10 == 0){ 
+  lightcolor = 1;
+}else if (frameCount % 13 == 0){
+  lightcolor = 2;
+}else if (frameCount % 15 == 0){
+  lightcolor = 3;
+  }
+
+
+switch (lightcolor){ //makes the traffic light colors appear and flash
+  case 1: //red light
+    fill(255, 0, 0);
+    circle(360, 240, 50);
+    break
+  case 2: //yellow light
+    fill(255, 238, 5);
+    circle(360, 315, 50);
+    break
+  case 3: //green light
+    fill(0, 255, 0);
+    circle(360, 365, 50);
+    break
+}
+  }
+  noFill();
+  arc(160, (mouseY), 300, 100, PI, TWO_PI);
+  arc(545, (mouseY), 300, 100, PI, TWO_PI);
+  arc(350, (mouseY), 85, 20, PI, TWO_PI);
+ 
+  
+}
+
+
 }
 
 function glasses(){ //creates the glasses
@@ -142,5 +220,20 @@ function atigmatism(a, b , c, d, e) {
   for (k = 0; k < 30; k++) {
   ellipse(380 + k*5, e + k*-4, 20 + k*-0.6);
 
+}
+}
+
+function switchscene() {
+if (mouseIsPressed){
+  if (mouseX >= 100 ){
+    if (mouseY <= 350)
+      scene = 2
+  }
+  }
+}
+
+function revertscene() {
+  if (keyIsPressed === true){
+     scene = 1
 }
 }
